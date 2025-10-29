@@ -18,8 +18,12 @@ La documentación inicial se encuentra organizada en la carpeta docs/ y las deci
 
     adr/ADR-000-monolito-django-postgres.md → Decisión arquitectónica inicial.
 
-# 🗂️ Estructura de carpetas
-
+## 🗂️ Estructura de carpetas
+```
+├── adr
+│   ├── ADR-000-monolito-node-postgres.md
+│   ├── ADR-001-base-de-datos.md
+│   └── ADR-002-autenticacion-jwt.md
 ├── backend
 │   ├── asgi.py
 │   ├── __init__.py
@@ -55,7 +59,14 @@ La documentación inicial se encuentra organizada en la carpeta docs/ y las deci
 │   ├── tests.py
 │   └── views.py
 ├── db.sqlite3
+├── docs
+│   ├── 01-vision-alcance.md
+│   ├── 02-nfrs.md
+│   └── 03-backlog.md
+├── LICENSE
 ├── manage.py
+├── README.md
+├── requirements.txt
 └── templates
     ├── base.html
     ├── categories_list.html
@@ -70,4 +81,6 @@ La documentación inicial se encuentra organizada en la carpeta docs/ y las deci
     ├── transaction_new.html
     ├── transactions.html
     └── transactions_list.html
+```
+
 
