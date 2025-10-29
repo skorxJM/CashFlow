@@ -1,0 +1,42 @@
+# Entorno virtual
+.venv/
+venv/
+env/
+
+# Archivos de base de datos locales
+db.sqlite3
+
+# Archivos de configuración o entorno
+.env
+.env.local
+.env.*.local
+
+# Archivos compilados de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Archivos de logs
+*.log
+
+# Archivos temporales o backups
+*.bak
+*.tmp
+*.swp
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de Node/Tailwind (si usas React)
+node_modules/
+dist/
+build/
+
+# Archivos de cobertura de pruebas
+.coverage
+htmlcov/
+
+# Archivos de editor/IDE
+.vscode/
+.idea/

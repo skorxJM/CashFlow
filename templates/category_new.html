@@ -1,0 +1,18 @@
+<!-- templates/category_new.html -->
+{% extends "base.html" %}
+{% block title %}Nueva categoría{% endblock %}
+
+{% block content %}
+<h1>Nueva categoría</h1>
+<form id="catForm">
+  {% csrf_token %}
+  <input name="name" id="name" placeholder="Nombre" required>
+  <button type="submit">Crear</button>
+</form>
+<script>
+document.getElementById('catForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  alert('Crear categoría (placeholder). Conectar API.');
+});
+</script>
+{% endblock %}

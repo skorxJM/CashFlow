@@ -1,0 +1,19 @@
+<!-- templates/category_edit.html -->
+{% extends "base.html" %}
+{% block title %}Editar categoría{% endblock %}
+
+{% block content %}
+<h1>Editar categoría</h1>
+<form id="catEditForm">
+  {% csrf_token %}
+  <input id="catId" type="hidden" value="{{ cat_id }}">
+  <input name="name" id="name" placeholder="Nombre" required>
+  <button type="submit">Guardar</button>
+</form>
+<script>
+document.getElementById('catEditForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  alert('Guardar categoría (placeholder). Conectar API.');
+});
+</script>
+{% endblock %}

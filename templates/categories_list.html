@@ -1,0 +1,17 @@
+<!-- templates/categories_list.html -->
+{% extends "base.html" %}
+{% block title %}Categorías{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-semibold mb-4">Categorías</h1>
+<div><a href="/categories/new/">Nueva categoría</a></div>
+<ul id="cat-list">
+  <li>Cargando...</li>
+</ul>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('cat-list').innerHTML = '<li>Sin datos (conectar API)</li>';
+});
+</script>
+{% endblock %}

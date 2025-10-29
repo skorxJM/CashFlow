@@ -1,0 +1,27 @@
+<!-- templates/export.html -->
+{% extends "base.html" %}
+{% block title %}Exportar{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-semibold mb-4">Exportar transacciones</h1>
+
+<form id="exportForm">
+  {% csrf_token %}
+  <label>Desde: <input type="date" name="start" id="start"></label><br><br>
+  <label>Hasta: <input type="date" name="end" id="end"></label><br><br>
+  <label>Formato:
+    <select name="format" id="format">
+      <option value="csv">CSV</option>
+      <option value="json">JSON</option>
+    </select>
+  </label><br><br>
+  <button type="submit">Generar</button>
+</form>
+
+<script>
+document.getElementById('exportForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  alert('Exportar (placeholder). Aquí llamaremos al endpoint de export.');
+});
+</script>
+{% endblock %}

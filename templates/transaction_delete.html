@@ -1,0 +1,21 @@
+<!-- templates/transaction_delete.html -->
+{% extends "base.html" %}
+{% block title %}Eliminar transacción{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-semibold mb-4">Eliminar transacción</h1>
+<p>¿Seguro que deseas eliminar la transacción <strong id="txInfo">#{{ tx_id }}</strong>?</p>
+
+<form method="post" id="delForm">
+  {% csrf_token %}
+  <button type="submit">Sí, eliminar</button>
+  <a href="/transactions/">Cancelar</a>
+</form>
+
+<script>
+document.getElementById('delForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  alert('Eliminar (placeholder). Aquí llamaremos a DELETE en la API.');
+});
+</script>
+{% endblock %}

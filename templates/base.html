@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CashFlex — {% block title %}{% endblock %}</title>
+  <!-- Tailwind CDN (puedes quitarlo si aún no quieres estilos) -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <header class="bg-white border-b py-3">
+    <div class="max-w-4xl mx-auto px-4 flex items-center justify-between">
+      <a href="/" class="font-bold">CashFlex</a>
+      <nav class="space-x-4 text-sm">
+        <a href="/" class="hover:underline">Dashboard</a>
+        <a href="/transactions/" class="hover:underline">Transacciones</a>
+        <a href="/categories/" class="hover:underline">Categorías</a>
+        <a href="/export/" class="hover:underline">Exportar</a>
+        <a href="/accounts/login/" class="hover:underline">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto p-4">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="max-w-4xl mx-auto p-4 text-xs text-gray-500">
+    <div>CashFlex — prototipo</div>
+  </footer>
+</body>
+</html>

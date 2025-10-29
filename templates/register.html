@@ -1,0 +1,16 @@
+<!-- templates/register.html -->
+{% extends "base.html" %}
+{% block title %}Registro{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-semibold mb-4">Registro</h1>
+
+<form method="post" action="/accounts/register/" class="max-w-md">
+  {% csrf_token %}
+  <label>Nombre de usuario:<br><input name="username" required></label><br><br>
+  <label>Email:<br><input name="email" type="email"></label><br><br>
+  <label>Contraseña:<br><input name="password1" type="password" required></label><br><br>
+  <label>Confirmar contraseña:<br><input name="password2" type="password" required></label><br><br>
+  <button type="submit">Crear cuenta</button>
+</form>
+{% endblock %}
