@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from pathlib import Path
+from django.core.management.utils import get_random_secret_key  # para fallback en dev
+import dj_database_url  # si ya lo usas para DATABASE_URL
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,9 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+# SECRET_KEY: lee desde variable de entorno en producción, usa fallback seguro en desarrollo
+SECRET_KEY = os.environ.get("SECRET_KEY")
+if not SECRET_KEY:
+    # Modo desarrollo / fallback: genera una clave si no hay env var
+    # Nota: no comites este fallback, úsalo sólo en DEV.
+    SECRET_KEY = os.environ.get("DJANGO_DEV_SECRET", get_random_secret_key())
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-3c=o^gj_4qhhzi!nqg7%vqy3ir*f++=l9r+*x-lbg^wfkcvf%_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

@@ -22,4 +22,4 @@ six==1.17.0
 sqlparse==0.5.3
 gunicorn
 whitenoise
-
+dj-database-url
