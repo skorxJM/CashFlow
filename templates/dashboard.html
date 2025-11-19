@@ -1,34 +1,196 @@
-<!-- templates/dashboard.html -->
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<h1 class="text-2xl font-semibold mb-4">Dashboard</h1>
-
-<section id="summary" class="mb-6">
-  <h2 class="font-medium">Resumen</h2>
-  <p>Balance: <strong id="balance">—</strong></p>
-  <p>Últimas transacciones:</p>
-  <ul id="recent-list" class="list-disc ml-6">
-    <li>Cargando...</li>
-  </ul>
-</section>
-
-<section id="quick">
-  <h2 class="font-medium">Accesos rápidos</h2>
-  <div class="space-x-2 mt-2">
-    <a href="/transactions/new/">Agregar transacción</a>
-    <a href="/transactions/">Ver todas</a>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Header -->
+  <div class="mb-8 animate-fade-in">
+    <h1 class="text-4xl font-bold text-primary-500 mb-2">Dashboard</h1>
+    <p class="text-primary-400">Resumen de tu situación financiera</p>
   </div>
-</section>
 
-<script>
-/* Esqueleto: aquí más adelante harás fetch('/api/transactions/') y calcular balance */
-document.addEventListener('DOMContentLoaded', () => {
-  // placeholder
-  const recent = document.getElementById('recent-list');
-  recent.innerHTML = '<li>Sin datos (conectar API)</li>';
-  document.getElementById('balance').textContent = '—';
-});
-</script>
+  <!-- Tarjetas de métricas principales -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <!-- Balance total -->
+    <div class="metric-card animate-slide-up">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="metric-label">Balance Total</p>
+          <p class="metric-value {% if balance >= 0 %}text-white{% else %}text-red-200{% endif %}">
+            ${{ balance }}
+          </p>
+        </div>
+        <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+          <span class="text-white text-xl">💰</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ingresos -->
+    <div class="metric-card animate-slide-up" style="animation-delay: 100ms;">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="metric-label">Ingresos Totales</p>
+          <p class="metric-value">+${{ total_income }}</p>
+        </div>
+        <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+          <span class="text-white text-xl">📈</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gastos -->
+    <div class="metric-card animate-slide-up" style="animation-delay: 200ms;">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="metric-label">Gastos Totales</p>
+          <p class="metric-value">-${{ total_expense }}</p>
+        </div>
+        <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+          <span class="text-white text-xl">📉</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acciones rápidas -->
+  <div class="mb-8">
+    <h2 class="text-xl font-semibold text-primary-500 mb-4">Acciones Rápidas</h2>
+    <div class="flex flex-wrap gap-4">
+      <a href="{% url 'transaction_new' %}" class="btn-primary flex items-center gap-2">
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14M5 12h14"></path>
+        </svg>
+        Nueva Transacción
+      </a>
+
+      <a href="{% url 'category_new' %}" class="btn-secondary flex items-center gap-2">
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14M5 12h14"></path>
+        </svg>
+        Nueva Categoría
+      </a>
+
+      <a href="{% url 'transactions_list' %}" class="btn-ghost flex items-center gap-2">
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+        Ver Todas las Transacciones
+      </a>
+      
+    </div>
+  </div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Últimas transacciones -->
+    <div class="card">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-semibold text-primary-500">Últimas Transacciones</h2>
+        <span class="badge-category">
+          {{ transactions|length }} transacciones
+        </span>
+      </div>
+      
+      {% if transactions %}
+        <div class="space-y-3">
+          {% for tx in transactions %}
+          <div class="flex justify-between items-center p-4 hover:bg-primary-50 rounded-lg transition-colors duration-200 border border-primary-100">
+            <div class="flex items-center space-x-4 flex-1 min-w-0">
+              <!-- Icono -->
+              <div class="w-10 h-10 rounded-full {% if tx.type == 'income' %}bg-primary-100{% else %}bg-red-100{% endif %} flex items-center justify-center flex-shrink-0">
+                <span class="{% if tx.type == 'income' %}text-primary-500{% else %}text-red-500{% endif %} text-sm">
+                  {% if tx.type == 'income' %}💰{% else %}💸{% endif %}
+                </span>
+              </div>
+              
+              <!-- Contenido -->
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center space-x-2 mb-1">
+                  <p class="font-semibold text-primary-700 text-sm truncate">{{ tx.description }}</p>
+                  {% if tx.category %}
+                    <span class="badge-category text-xs flex-shrink-0">{{ tx.category.name }}</span>
+                  {% endif %}
+                </div>
+                <p class="text-xs text-primary-400">
+                  {{ tx.created_at|date:"Y-m-d H:i" }}
+                </p>
+              </div>
+            </div>
+            
+            <!-- Monto -->
+            <div class="ml-4 flex-shrink-0">
+              <p class="font-bold text-lg {% if tx.type == 'income' %}text-primary-400{% else %}text-red-400{% endif %}">
+                {% if tx.type == 'income' %}+{% else %}-{% endif %}${{ tx.amount }}
+              </p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <a href="{% url 'transactions_list' %}" class="block text-center bg-primary-50 hover:bg-primary-100 text-primary-500 font-medium py-3 rounded-xl mt-6 transition-colors duration-200 flex items-center justify-center gap-2">
+          Ver todas las transacciones
+          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+
+      {% else %}
+        <div class="text-center py-8">
+          <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-primary-400 text-2xl">📝</span>
+          </div>
+          <p class="text-primary-400 mb-2">No hay transacciones aún</p>
+          <a href="{% url 'transaction_new' %}" class="text-primary-300 hover:text-primary-400 text-sm">
+            Crear tu primera transacción
+          </a>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Gastos por categoría -->
+    <div class="card">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-semibold text-primary-500">Gastos por Categoría</h2>
+        <span class="badge-category">
+          {{ categories_summary|length }} categorías
+        </span>
+      </div>
+      
+      {% if categories_summary %}
+        <div class="space-y-4">
+          {% for category in categories_summary %}
+            {% if category.total %}
+            <div class="flex justify-between items-center p-3 hover:bg-primary-50 rounded-lg transition-colors duration-200">
+              <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-primary-200 rounded-full flex items-center justify-center">
+                  <span class="text-primary-600 text-xs">🏷️</span>
+                </div>
+                <p class="font-semibold text-primary-700">{{ category.name }}</p>
+              </div>
+              <p class="text-red-400 font-bold">${{ category.total }}</p>
+            </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <a href="{% url 'categories_list' %}"
+          class="block text-center bg-primary-50 hover:bg-primary-100 text-primary-500 font-medium py-3 rounded-xl mt-6 transition-colors duration-200 flex items-center justify-center gap-2">
+          Gestionar categorías
+          <svg class="w-5 h-5 flex-shrink-0" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+
+      {% else %}
+        <div class="text-center py-8">
+          <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-primary-400 text-2xl">📊</span>
+          </div>
+          <p class="text-primary-400 mb-2">No hay categorías aún</p>
+          <a href="{% url 'category_new' %}" class="text-primary-300 hover:text-primary-400 text-sm">
+            Crear tu primera categoría
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
 {% endblock %}

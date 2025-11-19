@@ -1,27 +1,242 @@
-<!-- templates/export.html -->
 {% extends "base.html" %}
-{% block title %}Exportar{% endblock %}
+{% block title %}Exportar Informe{% endblock %}
 
 {% block content %}
-<h1 class="text-2xl font-semibold mb-4">Exportar transacciones</h1>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Header -->
+  <div class="mb-8 animate-fade-in">
+    <h1 class="text-3xl font-bold text-primary-500 mb-2">Exportar Informe</h1>
+    <p class="text-primary-400">Genera informes personalizados de tus transacciones</p>
+  </div>
 
-<form id="exportForm">
-  {% csrf_token %}
-  <label>Desde: <input type="date" name="start" id="start"></label><br><br>
-  <label>Hasta: <input type="date" name="end" id="end"></label><br><br>
-  <label>Formato:
-    <select name="format" id="format">
-      <option value="csv">CSV</option>
-      <option value="json">JSON</option>
-    </select>
-  </label><br><br>
-  <button type="submit">Generar</button>
-</form>
+  <!-- Mensajes de error -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert-error mb-6 animate-slide-up">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+          </svg>
+          <span class="font-medium">{{ message }}</span>
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- Formulario de exportación -->
+  <div class="card mb-8">
+    <h2 class="text-xl font-semibold text-primary-500 mb-6">Generar Nuevo Informe</h2>
+    
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+      
+      <!-- Fechas -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label for="start" class="input-label">
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              Desde (fecha)
+            </span>
+          </label>
+          <input 
+            type="date" 
+            name="start" 
+            id="start"
+            class="form-input input-field"
+          >
+        </div>
+        
+        <div>
+          <label for="end" class="input-label">
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              Hasta (fecha)
+            </span>
+          </label>
+          <input 
+            type="date" 
+            name="end" 
+            id="end"
+            class="form-input input-field"
+          >
+        </div>
+      </div>
+
+      <!-- Formato de exportación -->
+      <div>
+        <label class="input-label">
+          <span class="flex items-center">
+            <svg class="w-4 h-4 mr-2 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+            </svg>
+            Formato de Exportación
+          </span>
+        </label>
+
+        <div class="space-y-3 bg-primary-50 rounded-xl p-4">
+          <!-- CSV -->
+          <label for="format_csv" class="flex items-start gap-3 p-3 hover:bg-white rounded-lg transition-colors duration-200 cursor-pointer">
+            <input 
+              type="radio" 
+              name="format" 
+              value="csv" 
+              id="format_csv" 
+              checked
+              class="mt-1 w-4 h-4 text-primary-500 border-primary-300 focus:ring-primary-200"
+            >
+            <div class="min-w-0">
+              <div class="flex items-center justify-between">
+                <span class="font-semibold text-primary-700">CSV</span>
+              </div>
+              <p class="text-sm text-primary-500 mt-1">Formato de hoja de cálculo (Excel/Google Sheets)</p>
+            </div>
+          </label>
+
+          <!-- JSON -->
+          <label for="format_json" class="flex items-start gap-3 p-3 hover:bg-white rounded-lg transition-colors duration-200 cursor-pointer">
+            <input 
+              type="radio" 
+              name="format" 
+              value="json" 
+              id="format_json"
+              class="mt-1 w-4 h-4 text-primary-500 border-primary-300 focus:ring-primary-200"
+            >
+            <div class="min-w-0">
+              <div class="flex items-center justify-between">
+                <span class="font-semibold text-primary-700">JSON</span>
+              </div>
+              <p class="text-sm text-primary-500 mt-1">Formato estructurado para integración</p>
+            </div>
+          </label>
+
+          <!-- PDF -->
+          <label for="format_pdf" class="flex items-start gap-3 p-3 hover:bg-white rounded-lg transition-colors duration-200 cursor-pointer">
+            <input 
+              type="radio" 
+              name="format" 
+              value="pdf" 
+              id="format_pdf"
+              class="mt-1 w-4 h-4 text-primary-500 border-primary-300 focus:ring-primary-200"
+            >
+            <div class="min-w-0">
+              <div class="flex items-center justify-between">
+                <span class="font-semibold text-primary-700">PDF</span>
+              </div>
+              <p class="text-sm text-primary-500 mt-1">Informe visual profesional (con gráficos y resumen)</p>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="flex gap-3 pt-4">
+        <button type="submit" class="btn-primary inline-flex items-center justify-center gap-2 whitespace-nowrap">
+          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+          </svg>
+          <span>Descargar Informe</span>
+        </button>
+
+        <button type="reset" class="btn-ghost inline-flex items-center justify-center gap-2 whitespace-nowrap">
+          <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+          <span>Limpiar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Últimos informes -->
+  <div class="card">
+    <h2 class="text-xl font-semibold text-primary-500 mb-6">Informes Recientes</h2>
+    
+    {% if recent_reports %}
+      <div class="space-y-4">
+        {% for report in recent_reports %}
+          <div class="flex justify-between items-center p-4 border border-primary-200 rounded-xl hover:bg-primary-50 transition-colors duration-200">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center space-x-3 mb-2">
+                <div class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
+                  <span class="text-primary-500 text-sm">
+                    {% if report.format == 'csv' %}📊
+                    {% elif report.format == 'json' %}🔧
+                    {% elif report.format == 'pdf' %}📄
+                    {% else %}📁{% endif %}
+                  </span>
+                </div>
+                <div class="min-w-0">
+                  <p class="font-semibold text-primary-700 truncate">{{ report.name }}</p>
+                  <div class="flex items-center space-x-4 text-sm text-primary-500 mt-1">
+                    <span class="truncate">{{ report.period }}</span>
+                    <span>•</span>
+                    <span>{{ report.transactions_count }} transacciones</span>
+                    <span>•</span>
+                    <span class="badge-category">{{ report.format|upper }}</span>
+                  </div>
+                </div>
+              </div>
+              <p class="text-xs text-primary-400">Generado: {{ report.created_at|date:"Y-m-d H:i" }}</p>
+            </div>
+
+            <div class="ml-4 flex-shrink-0">
+              <form method="post" action="{% url 'export' %}" class="m-0">
+                {% csrf_token %}
+                <input type="hidden" name="start" value="{{ report.start_date }}">
+                <input type="hidden" name="end" value="{{ report.end_date }}">
+                <input type="hidden" name="format" value="{{ report.format }}">
+                <button type="submit" class="text-primary-500 hover:text-primary-600 transition-colors duration-200 flex items-center space-x-1">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                  </svg>
+                  <span class="text-sm">Descargar</span>
+                </button>
+              </form>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="text-center py-8">
+        <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <span class="text-primary-400 text-2xl">📋</span>
+        </div>
+        <h3 class="text-lg font-semibold text-primary-600 mb-2">No hay informes guardados</h3>
+        <p class="text-primary-400">Genera tu primer informe usando el formulario superior</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
 
 <script>
-document.getElementById('exportForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  alert('Exportar (placeholder). Aquí llamaremos al endpoint de export.');
-});
+  // Pre-llenar fechas
+  const today = new Date();
+  const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+  
+  // Formatear fechas para input type="date"
+  function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+  
+  if (document.getElementById('end')) {
+    document.getElementById('end').value = formatDate(today);
+  }
+  if (document.getElementById('start')) {
+    document.getElementById('start').value = formatDate(thirtyDaysAgo);
+  }
+  
+  function deleteReport(reportId) {
+    if (confirm('¿Está seguro de que desea eliminar este informe?')) {
+      console.log('Eliminar informe:', reportId);
+    }
+  }
 </script>
 {% endblock %}

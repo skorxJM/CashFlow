@@ -1,35 +1,144 @@
-<!-- templates/transaction_edit.html -->
 {% extends "base.html" %}
-{% block title %}Editar transacción{% endblock %}
+{% block title %}Editar Transacción{% endblock %}
 
 {% block content %}
-<h1 class="text-2xl font-semibold mb-4">Editar transacción</h1>
+<div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Header -->
+  <div class="mb-8 animate-fade-in">
+    <h1 class="text-3xl font-bold text-primary-500 mb-2">Editar Transacción</h1>
+    <p class="text-primary-400">Modifica los detalles de tu transacción</p>
+  </div>
 
-<form id="editTxForm" method="post">
-  {% csrf_token %}
-  <input type="hidden" id="txId" value="{{ tx_id }}">
-  <label>Tipo:<br>
-    <select name="type" id="type">
-      <option value="expense">Gasto</option>
-      <option value="income">Ingreso</option>
-    </select>
-  </label><br><br>
+  <!-- Mensajes de éxito -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert-success mb-6 animate-slide-up">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 text-primary-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+          </svg>
+          <span class="font-medium">{{ message }}</span>
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
 
-  <label>Monto:<br><input name="amount" id="amount" type="number" step="0.01" required></label><br><br>
+  <!-- Formulario -->
+  <div class="card">
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+      
+      <!-- Tipo -->
+      <div>
+        <label for="type" class="input-label">
+          <span class="flex items-center">
+            <svg class="w-4 h-4 mr-2 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            Tipo de Transacción
+          </span>
+        </label>
+        <select name="type" id="type" class="form-select input-field">
+          <option value="expense" {% if transaction.type == 'expense' %}selected{% endif %}>Gasto</option>
+          <option value="income" {% if transaction.type == 'income' %}selected{% endif %}>Ingreso</option>
+        </select>
+      </div>
 
-  <label>Categoría:<br><input name="category" id="category" type="text"></label><br><br>
+      <!-- Monto -->
+      <div>
+        <label for="amount" class="input-label">
+          <span class="flex items-center">
+            <svg class="w-4 h-4 mr-2 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+            </svg>
+            Monto
+          </span>
+        </label>
+        <input 
+          type="number" 
+          name="amount" 
+          id="amount" 
+          step="0.01" 
+          value="{{ transaction.amount }}" 
+          required
+          class="form-input input-field"
+        >
+      </div>
 
-  <label>Descripción:<br><input name="description" id="description" type="text"></label><br><br>
+      <!-- Categoría -->
+      <div>
+        <label for="category" class="input-label">
+          <span class="flex items-center">
+            <svg class="w-4 h-4 mr-2 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+            </svg>
+            Categoría
+          </span>
+        </label>
+        <select name="category" id="category" class="form-select input-field">
+          <option value="">Sin categoría</option>
+          {% for category in categories %}
+            <option value="{{ category.id }}" {% if transaction.category.id == category.id %}selected{% endif %}>
+              {{ category.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
 
-  <button type="submit">Guardar</button>
-</form>
+      <!-- Descripción -->
+      <div>
+        <label for="description" class="input-label">
+          <span class="flex items-center">
+            <svg class="w-4 h-4 mr-2 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+            Descripción
+          </span>
+        </label>
+        <input 
+          type="text" 
+          name="description" 
+          id="description" 
+          value="{{ transaction.description }}" 
+          class="form-input input-field"
+        >
+      </div>
+            <!-- Fecha -->
+      <div>
+        <label for="created_at" class="input-label">
+          <span class="flex items-center">
+            <svg class="w-4 h-4 mr-2 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            Fecha de la Transacción
+          </span>
+        </label>
 
-<script>
-const id = document.getElementById('txId').value;
-// Aquí hacemo fetch('/api/transactions/'+id+'/') para cargar datos y luego PATCH al enviar.
-document.getElementById('editTxForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  alert('Guardar cambios (placeholder). Aquí se llamará a la API para editar.');
-});
-</script>
+        <input
+          type="datetime-local"
+          name="created_at"
+          id="created_at"
+          class="form-input input-field"
+          value="{{ transaction.created_at|date:'Y-m-d\\TH:i' }}"
+          required
+        >
+      </div>
+
+      
+      <!-- Botones (Edit) -->
+      <div class="flex gap-3 pt-4">
+        <button type="submit" class="btn-primary flex-1 flex items-center justify-center gap-2">
+          <!-- SVG guardar (check) -->
+          <svg class="w-5 h-5 flex-shrink-0" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span>Guardar Cambios</span>
+        </button>
+        <a href="{% url 'transactions_list' %}" class="btn-ghost">
+          Cancelar
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}

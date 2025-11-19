@@ -1,16 +1,149 @@
-<!-- templates/register.html -->
 {% extends "base.html" %}
-{% block title %}Registro{% endblock %}
+{% block title %}Crear Cuenta{% endblock %}
 
 {% block content %}
-<h1 class="text-2xl font-semibold mb-4">Registro</h1>
+<div class="min-h-[80vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8">
+  <div class="max-w-md w-full space-y-8">
+    <!-- Header con animación -->
+    <div class="text-center animate-fade-in">
+      <div class="mx-auto w-20 h-20 bg-gradient-to-br from-primary-300 to-primary-400 rounded-2xl flex items-center justify-center shadow-lg mb-4">
+        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+        </svg>
+      </div>
+      <h1 class="text-3xl font-bold text-primary-500">Únete a CashFlow</h1>
+      <p class="mt-2 text-primary-400">Crea tu cuenta y comienza a gestionar tus finanzas</p>
+    </div>
 
-<form method="post" action="/accounts/register/" class="max-w-md">
-  {% csrf_token %}
-  <label>Nombre de usuario:<br><input name="username" required></label><br><br>
-  <label>Email:<br><input name="email" type="email"></label><br><br>
-  <label>Contraseña:<br><input name="password1" type="password" required></label><br><br>
-  <label>Confirmar contraseña:<br><input name="password2" type="password" required></label><br><br>
-  <button type="submit">Crear cuenta</button>
-</form>
+    <!-- Card del formulario -->
+    <div class="card hover-lift transform transition-all duration-300">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert-error mb-6 animate-slide-up">
+            <div class="flex items-center">
+              <svg class="w-5 h-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+              </svg>
+              <span class="font-medium">{{ message }}</span>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="post" class="space-y-6">
+        {% csrf_token %}
+        
+        <!-- Campo Usuario -->
+        <div>
+          <label for="username" class="input-label">
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+              Nombre de usuario
+            </span>
+          </label>
+          <input 
+            type="text" 
+            name="username" 
+            id="username"
+            required
+            placeholder="Ej: juan_perez"
+            class="form-input"
+          >
+        </div>
+
+        <!-- Campo Email -->
+        <div>
+          <label for="email" class="input-label">
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
+              Email
+            </span>
+          </label>
+          <input 
+            type="email" 
+            name="email" 
+            id="email"
+            required
+            placeholder="tu@email.com"
+            class="form-input"
+          >
+        </div>
+
+        <!-- Campo Contraseña -->
+        <div>
+          <label for="password" class="input-label">
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+              </svg>
+              Contraseña
+            </span>
+          </label>
+          <input 
+            type="password" 
+            name="password" 
+            id="password"
+            required
+            placeholder="Mínimo 8 caracteres"
+            class="form-input"
+          >
+        </div>
+
+        <!-- Campo Confirmar Contraseña -->
+        <div>
+          <label for="password2" class="input-label">
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+              </svg>
+              Confirmar contraseña
+            </span>
+          </label>
+          <input 
+            type="password" 
+            name="password2" 
+            id="password2"
+            required
+            placeholder="Repite tu contraseña"
+            class="form-input"
+          >
+        </div>
+        
+        <!-- Botón de registro -->
+        <button 
+          type="submit" 
+          class="w-full bg-gradient-to-r from-primary-300 to-primary-400 hover:from-primary-400 hover:to-primary-500 text-white font-semibold py-3 px-4 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl transform hover:scale-105"
+        >
+          <span class="flex items-center justify-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+            </svg>
+            Crear mi cuenta
+          </span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Enlace a login -->
+    <div class="text-center">
+      <p class="text-primary-500">
+        ¿Ya tienes cuenta? 
+        <a href="{% url 'login' %}" class="font-semibold text-primary-400 hover:text-primary-300 transition-colors duration-200 underline">
+          Inicia sesión aquí
+        </a>
+      </p>
+    </div>
+
+    <!-- Decoración adicional -->
+    <div class="flex justify-center space-x-2 mt-8">
+      <div class="w-2 h-2 bg-primary-200 rounded-full animate-pulse-soft"></div>
+      <div class="w-2 h-2 bg-primary-300 rounded-full animate-pulse-soft" style="animation-delay: 0.2s"></div>
+      <div class="w-2 h-2 bg-primary-400 rounded-full animate-pulse-soft" style="animation-delay: 0.4s"></div>
+    </div>
+  </div>
+</div>
 {% endblock %}

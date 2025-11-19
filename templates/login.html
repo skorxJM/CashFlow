@@ -1,15 +1,116 @@
-<!-- templates/login.html -->
 {% extends "base.html" %}
-{% block title %}Login{% endblock %}
+{% block title %}Iniciar Sesión{% endblock %}
 
 {% block content %}
-<h1 class="text-2xl font-semibold mb-4">Iniciar sesión</h1>
+<div class="min-h-[80vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
+  <div class="max-w-md w-full space-y-8">
+    <!-- Header con animación (estilo igual que register) -->
+    <div class="text-center animate-fade-in">
+      <div class="mx-auto w-20 h-20 bg-gradient-to-br from-primary-300 to-primary-400 rounded-2xl flex items-center justify-center shadow-lg mb-4">
+        <!-- Icono de login (flecha entrando en rectángulo) -->
+        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 17l5-5-5-5" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H3" />
+        </svg>
+      </div>
 
-<form method="post" action="{% url 'login' %}" class="max-w-md">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit" class="mt-2">Entrar</button>
-</form>
+      <h1 class="text-3xl font-bold text-primary-500">Bienvenido de nuevo</h1>
+      <p class="mt-2 text-primary-400">Inicia sesión para continuar</p>
+    </div>
 
-<p class="text-sm mt-4">¿No tienes cuenta? <a href="/accounts/register/">Regístrate</a></p>
+
+    <!-- Card del formulario -->
+    <div class="card hover-lift transform transition-all duration-300">
+      {% if form.errors %}
+        <div class="alert-error mb-6 animate-slide-up">
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="font-medium">Por favor, verifica tu usuario y contraseña.</span>
+          </div>
+        </div>
+      {% endif %}
+
+      <form method="post" class="space-y-6">
+        {% csrf_token %}
+        
+        <!-- Campo Usuario -->
+        <div>
+          <label for="id_username" class="input-label">
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+              Usuario
+            </span>
+          </label>
+          <input 
+            type="text" 
+            name="username" 
+            id="id_username"
+            required
+            placeholder="Tu nombre de usuario"
+            class="form-input input-field"
+          >
+        </div>
+
+        <!-- Campo Contraseña -->
+        <div>
+          <label for="id_password" class="input-label">
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+              </svg>
+              Contraseña
+            </span>
+          </label>
+          <input 
+            type="password" 
+            name="password" 
+            id="id_password"
+            required
+            placeholder="Tu contraseña"
+            class="form-input input-field"
+          >
+        </div>
+
+        <input type="hidden" name="next" value="{{ next }}" />
+        
+        <!-- Botón de login (idéntico al estilo de register) -->
+        <button 
+          type="submit" 
+          class="w-full bg-gradient-to-r from-primary-300 to-primary-400 hover:from-primary-400 hover:to-primary-500 text-white font-semibold py-3 px-4 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl transform hover:scale-105"
+        >
+          <span class="flex items-center justify-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 17l5-5-5-5" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H3" />
+            </svg>
+            Entrar a mi cuenta
+          </span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Enlace a registro -->
+    <div class="text-center">
+      <p class="text-primary-500">
+        ¿No tienes cuenta? 
+        <a href="{% url 'register' %}" class="font-semibold text-primary-400 hover:text-primary-300 transition-colors duration-200 underline">
+          Regístrate aquí
+        </a>
+      </p>
+    </div>
+
+    <!-- Decoración adicional -->
+    <div class="flex justify-center space-x-2 mt-8">
+      <div class="w-2 h-2 bg-primary-200 rounded-full animate-pulse-soft"></div>
+      <div class="w-2 h-2 bg-primary-300 rounded-full animate-pulse-soft" style="animation-delay: 0.2s"></div>
+      <div class="w-2 h-2 bg-primary-400 rounded-full animate-pulse-soft" style="animation-delay: 0.4s"></div>
+    </div>
+  </div>
+</div>
 {% endblock %}

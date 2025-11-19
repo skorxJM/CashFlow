@@ -80,10 +80,15 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'cashflow_db',
+        'USER': 'cashflow_user',
+        'PASSWORD': 'cashflow_pass199119',  # contraseña guardada
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
@@ -117,6 +122,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# ...existing code...
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'login'
+
+# Configuración de autenticación
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
@@ -134,8 +149,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# AGREGA ESTAS LÍNEAS:
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # Esto le dice a Django dónde buscar archivos estáticos
+]
+
+# Opcional para producción:
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
 TEMPLATES[0]['DIRS'] = [ BASE_DIR / 'templates' ]
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

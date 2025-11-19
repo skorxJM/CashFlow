@@ -1,32 +1,229 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CashFlex — {% block title %}{% endblock %}</title>
-  <!-- Tailwind CDN (puedes quitarlo si aún no quieres estilos) -->
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-50 min-h-screen">
-  <header class="bg-white border-b py-3">
-    <div class="max-w-4xl mx-auto px-4 flex items-center justify-between">
-      <a href="/" class="font-bold">CashFlex</a>
-      <nav class="space-x-4 text-sm">
-        <a href="/" class="hover:underline">Dashboard</a>
-        <a href="/transactions/" class="hover:underline">Transacciones</a>
-        <a href="/categories/" class="hover:underline">Categorías</a>
-        <a href="/export/" class="hover:underline">Exportar</a>
-        <a href="/accounts/login/" class="hover:underline">Login</a>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>CashFlow — {% block title %}{% endblock %}</title>
+    {% load static %}
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+  </head>
+  <body class="bg-primary-50 min-h-screen">
+    <!-- Header con gradiente -->
+<header class="bg-gradient-to-r from-primary-500 to-primary-400 shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo -->
+      <a href="/" class="flex items-center space-x-3">
+        <img 
+          src="{% static 'icons/logo_cashflow.svg' %}" 
+          alt="CashFlow Logo" 
+          class="w-12 h-12"
+        >
+        <span class="font-bold text-xl text-white">CashFlow</span>
+      </a>
+
+      <!-- Navegación -->
+      <nav class="flex items-center space-x-8">
+        {% if user.is_authenticated %}
+          <a href="/" class="nav-link text-white hover:text-primary-100 {% if request.path == '/' %}font-semibold border-b-2 border-white{% endif %}">
+            Dashboard
+          </a>
+          <a href="{% url 'transactions_list' %}" class="nav-link text-white hover:text-primary-100 {% if 'transactions' in request.path %}font-semibold border-b-2 border-white{% endif %}">
+            Transacciones
+          </a>
+          <a href="{% url 'categories_list' %}" class="nav-link text-white hover:text-primary-100 {% if 'categories' in request.path %}font-semibold border-b-2 border-white{% endif %}">
+            Categorías
+          </a>
+          <a href="{% url 'export' %}" class="nav-link text-white hover:text-primary-100 {% if 'export' in request.path %}font-semibold border-b-2 border-white{% endif %}">
+            Exportar
+          </a>
+
+          <!-- Avatar + Dropdown -->
+          <div class="ml-4 pl-4 border-l border-primary-300 relative" x-data>
+            <!-- Botón avatar -->
+            <button
+              id="userMenuButton"
+              type="button"
+              class="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-white/20 hover:bg-white/30 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/30"
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-label="Abrir menú de usuario"
+            >
+              <svg class="w-5 h-5 flex-shrink-0 stroke-current text-white" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle cx="12" cy="8" r="3" stroke="currentColor" stroke-width="2"></circle>
+                <path d="M4 20c1.5-4 7-6 8-6s6.5 2 8 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </button>
+
+
+            <!-- Dropdown: hidden por defecto -->
+            <div id="userDropdown"
+                 class="origin-top-right absolute right-0 mt-2 w-48 rounded-lg bg-white text-primary-700 shadow-lg ring-1 ring-black ring-opacity-5 z-50 hidden"
+                 role="menu"
+                 aria-orientation="vertical"
+                 aria-labelledby="userMenuButton"
+            >
+              <div class="py-2">
+                <!-- Opciones (puedes añadir más enlaces) -->
+                <a href="#" class="block px-4 py-2 text-sm hover:bg-primary-50">
+                  Perfil
+                </a>
+                <a href="#" class="block px-4 py-2 text-sm hover:bg-primary-50">
+                  Ajustes
+                </a>
+                <div class="border-t border-primary-100 my-1"></div>
+
+                <!-- Logout: formulario para enviar POST con csrf -->
+                <form method="post" action="{% url 'logout' %}" class="m-0">
+                  {% csrf_token %}
+                  <button type="submit" class="w-full text-left px-4 py-2 text-sm hover:bg-primary-50">
+                    Salir
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+        {% else %}
+          <!-- En la sección de navegación para usuarios NO autenticados -->
+          <div class="flex items-center space-x-4">
+            <a href="{% url 'login' %}" class="text-white hover:text-primary-100 font-medium transition-colors duration-200">
+              Iniciar sesión
+            </a>
+            <a href="{% url 'register' %}" class="bg-gradient-to-r from-primary-300 to-primary-400 hover:from-primary-400 hover:to-primary-500 text-white font-semibold py-2 px-4 rounded-xl shadow-lg transition-all duration-1000 hover:shadow-xl hover:scale-105 inline-flex items-center space-x-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+              </svg>
+              <span>Registrarse</span>
+            </a>
+          </div>
+        {% endif %}
       </nav>
     </div>
-  </header>
+  </div>
+</header>
 
-  <main class="max-w-4xl mx-auto p-4">
-    {% block content %}{% endblock %}
-  </main>
+<!-- Script para toggle del dropdown (coloca antes de </body> o en base.html) -->
+<script>
+  (function () {
+    const btn = document.getElementById('userMenuButton');
+    const dropdown = document.getElementById('userDropdown');
 
-  <footer class="max-w-4xl mx-auto p-4 text-xs text-gray-500">
-    <div>CashFlex — prototipo</div>
-  </footer>
-</body>
+    if (!btn || !dropdown) return;
+
+    function openMenu() {
+      dropdown.classList.remove('hidden');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+    function closeMenu() {
+      dropdown.classList.add('hidden');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+    function toggleMenu() {
+      if (dropdown.classList.contains('hidden')) openMenu(); else closeMenu();
+    }
+
+    // Toggle on button click
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      toggleMenu();
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function (e) {
+      if (!dropdown.classList.contains('hidden')) {
+        // si el click NO está dentro del dropdown ni en el botón, cerramos
+        if (!dropdown.contains(e.target) && !btn.contains(e.target)) {
+          closeMenu();
+        }
+      }
+    });
+
+    // Close on Esc
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeMenu();
+    });
+  })();
+</script>
+
+
+    <!-- Mensajes flash -->
+    {% if messages %}
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+      {% for message in messages %}
+      <div class="alert-success animate-fade-in mb-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-primary-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="font-medium">{{ message }}</span>
+          </div>
+          <button onclick="this.parentElement.parentElement.remove()" class="text-primary-400 hover:text-primary-600">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Contenido principal -->
+    <main class="flex-grow">
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-primary-600 to-primary-500 text-white mt-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <!-- Información -->
+          <div class="mb-4 md:mb-0">
+            <div class="flex items-center space-x-3 mb-2">
+              <img 
+                src="{% static 'icons/logo_cashflow.svg' %}" 
+                alt="CashFlow Logo" 
+                class="w-12 h-12 transform scale-150"
+              >
+              <span class="font-bold text-lg text-white">CashFlow</span>
+            </div>
+            <p class="text-primary-100 text-sm">Controla tus finanzas de manera inteligente</p>
+          </div>
+          
+          <!-- Copyright -->
+          <div class="text-center md:text-right">
+            <p class="text-primary-100">&copy; 2025 CashFlow. Todos los derechos reservados.</p>
+            <p class="text-primary-200 text-xs mt-1">Desarrollado con ❤️ para tu tranquilidad financiera</p>
+          </div>
+        </div>
+        
+        <!-- Ola decorativa -->
+        <div class="mt-6 pt-6 border-t border-primary-400">
+          <div class="flex justify-center space-x-6 text-primary-200 text-sm">
+            <span>💳 Gestión de transacciones</span>
+            <span>📊 Análisis financiero</span>
+            <span>🔒 Seguro y confiable</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Script para cerrar mensajes automáticamente -->
+    <script>
+      // Cerrar mensajes automáticamente después de 5 segundos
+      document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+          const messages = document.querySelectorAll('.alert-success');
+          messages.forEach(function(message) {
+            message.style.opacity = '0';
+            setTimeout(function() {
+              message.remove();
+            }, 300);
+          });
+        }, 5000);
+      });
+    </script>
+  </body>
 </html>

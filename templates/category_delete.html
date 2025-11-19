@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% block title %}Eliminar Transacción{% endblock %}
+{% block title %}Eliminar Categoría{% endblock %}
 
 {% block content %}
 <div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-8">
   <!-- Header -->
   <div class="mb-8 animate-fade-in">
-    <h1 class="text-3xl font-bold text-primary-500 mb-2">Eliminar Transacción</h1>
-    <p class="text-primary-400">Confirma la eliminación de esta transacción</p>
+    <h1 class="text-3xl font-bold text-primary-500 mb-2">Eliminar Categoría</h1>
+    <p class="text-primary-400">Confirma la eliminación de esta categoría</p>
   </div>
 
   <!-- Alerta de confirmación -->
@@ -16,21 +16,12 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
       </svg>
       <div>
-        <p class="font-bold text-red-700 mb-2">¿Está seguro de que desea eliminar esta transacción?</p>
+        <p class="font-bold text-red-700 mb-2">¿Está seguro de que desea eliminar la categoría?</p>
         <div class="text-red-600 text-sm space-y-2">
-          <p><strong>Tipo:</strong> 
-            {% if transaction.type == 'income' %}
-              <span class="badge-income">Ingreso</span>
-            {% else %}
-              <span class="badge-expense">Gasto</span>
-            {% endif %}
+          <p><strong>Categoría:</strong> <span class="bg-red-100 text-red-700 px-2 py-1 rounded-full text-sm">{{ category.name }}</span></p>
+          <p class="mt-3 text-red-500">
+            <strong>Nota:</strong> Si hay transacciones asociadas a esta categoría, se desasociarán automáticamente.
           </p>
-          <p><strong>Monto:</strong> ${{ transaction.amount }}</p>
-          <p><strong>Descripción:</strong> {{ transaction.description }}</p>
-          <p><strong>Fecha:</strong> {{ transaction.created_at|date:"Y-m-d H:i" }}</p>
-          {% if transaction.category %}
-          <p><strong>Categoría:</strong> <span class="badge-category">{{ transaction.category.name }}</span></p>
-          {% endif %}
         </div>
       </div>
     </div>
@@ -45,7 +36,7 @@
         <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl flex-1">
           Sí, Eliminar
         </button>
-        <a href="{% url 'transactions_list' %}" class="btn-ghost">
+        <a href="{% url 'categories_list' %}" class="btn-ghost">
           Cancelar
         </a>
       </div>

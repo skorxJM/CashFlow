@@ -1,17 +1,82 @@
-<!-- templates/categories_list.html -->
 {% extends "base.html" %}
 {% block title %}Categorías{% endblock %}
 
 {% block content %}
-<h1 class="text-2xl font-semibold mb-4">Categorías</h1>
-<div><a href="/categories/new/">Nueva categoría</a></div>
-<ul id="cat-list">
-  <li>Cargando...</li>
-</ul>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Header -->
+  <div class="mb-8 animate-fade-in">
+    <h1 class="text-3xl font-bold text-primary-500 mb-2">Mis Categorías</h1>
+    <p class="text-primary-400">Organiza y gestiona tus categorías de transacciones</p>
+  </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('cat-list').innerHTML = '<li>Sin datos (conectar API)</li>';
-});
-</script>
+  <!-- Botón de acción -->
+  <div class="mb-6">
+    <a href="{% url 'category_new' %}" class="btn-primary">
+      Nueva Categoría
+    </a>
+  </div>
+
+  {% if categories and categories|length > 0 %}
+    <!-- Tabla de categorías -->
+    <div class="card overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="border-b border-primary-100">
+              <th class="px-6 py-4 text-left text-sm font-semibold text-primary-700 uppercase tracking-wider">Nombre</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-primary-700 uppercase tracking-wider">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-primary-50">
+            {% for category in categories %}
+            <tr class="hover:bg-primary-50 transition-colors duration-150">
+              <td class="px-6 py-4">
+                <div class="flex items-center space-x-3">
+                  <div class="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
+                    <span class="text-primary-500 text-sm">🏷️</span>
+                  </div>
+                  <span class="text-primary-700 font-medium">{{ category.name }}</span>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex space-x-4">
+                  <a href="{% url 'category_edit' category.id %}" class="text-primary-500 hover:text-primary-600 transition-colors duration-200 flex items-center space-x-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                    <span class="text-sm">Editar</span>
+                  </a>
+                  <a href="{% url 'category_delete' category.id %}" class="text-red-500 hover:text-red-600 transition-colors duration-200 flex items-center space-x-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                    <span class="text-sm">Eliminar</span>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Resumen -->
+    <div class="mt-6 text-sm text-primary-500">
+      Mostrando {{ categories|length }} categorías
+    </div>
+  {% else %}
+    <!-- Estado vacío -->
+    <div class="card text-center py-12">
+      <div class="w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <span class="text-primary-400 text-3xl">📊</span>
+      </div>
+      <h3 class="text-xl font-semibold text-primary-600 mb-2">No hay categorías</h3>
+      <p class="text-primary-400 mb-6">Aún no has creado ninguna categoría</p>
+      <a href="{% url 'category_new' %}" class="btn-primary">
+        Crear Primera Categoría
+      </a>
+    </div>
+  {% endif %}
+</div>
 {% endblock %}

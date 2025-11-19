@@ -5,6 +5,7 @@ env/
 
 # Archivos de base de datos locales
 db.sqlite3
+backup_sqlite.json
 
 # Archivos de configuración o entorno
 .env
@@ -15,6 +16,7 @@ db.sqlite3
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
 
 # Archivos de logs
 *.log
@@ -28,7 +30,7 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-# Archivos de Node/Tailwind (si usas React)
+# Archivos de Node/Tailwind
 node_modules/
 dist/
 build/
@@ -36,7 +38,26 @@ build/
 # Archivos de cobertura de pruebas
 .coverage
 htmlcov/
+.pytest_cache/
 
 # Archivos de editor/IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+
+# Archivos de Python packaging
+*.egg
+*.egg-info/
+pip-wheel-metadata/
+
+# Archivos de Jupyter
+.ipynb_checkpoints/
+
+# Archivos de mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Archivos de profiling
+.prof

@@ -1,5 +1,5 @@
-CashFlex-V2.0
-# 💰 CashFlex
+Cashflow
+# 💰 CashFlow
 
 Aplicación web para gestionar ingresos y gastos personales.  
 Desarrollada con **Django REST Framework + Tailwind/React + PostgreSQL**.

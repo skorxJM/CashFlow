@@ -1,19 +1,63 @@
-<!-- templates/category_edit.html -->
 {% extends "base.html" %}
-{% block title %}Editar categoría{% endblock %}
+{% block title %}Editar Categoría{% endblock %}
 
 {% block content %}
-<h1>Editar categoría</h1>
-<form id="catEditForm">
-  {% csrf_token %}
-  <input id="catId" type="hidden" value="{{ cat_id }}">
-  <input name="name" id="name" placeholder="Nombre" required>
-  <button type="submit">Guardar</button>
-</form>
-<script>
-document.getElementById('catEditForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  alert('Guardar categoría (placeholder). Conectar API.');
-});
-</script>
+<div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Header -->
+  <div class="mb-8 animate-fade-in">
+    <h1 class="text-3xl font-bold text-primary-500 mb-2">Editar Categoría</h1>
+    <p class="text-primary-400">Modifica el nombre de tu categoría</p>
+  </div>
+
+  <!-- Mensajes de éxito -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert-success mb-6 animate-slide-up">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 text-primary-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+          </svg>
+          <span class="font-medium">{{ message }}</span>
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- Formulario -->
+  <div class="card">
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+      
+      <!-- Nombre -->
+      <div>
+        <label for="name" class="input-label">
+          <span class="flex items-center">
+            <svg class="w-4 h-4 mr-2 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+            </svg>
+            Nombre de la categoría
+          </span>
+        </label>
+        <input 
+          type="text" 
+          name="name" 
+          id="name" 
+          value="{{ category.name }}" 
+          required
+          class="form-input"
+        >
+      </div>
+      
+      <!-- Botones -->
+      <div class="flex gap-3 pt-4">
+        <button type="submit" class="btn-primary flex-1">
+          Guardar Cambios
+        </button>
+        <a href="{% url 'categories_list' %}" class="btn-ghost">
+          Cancelar
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}
